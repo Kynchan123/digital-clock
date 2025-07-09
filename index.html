@@ -30,14 +30,14 @@
   let clockInterval = null;
 
   // Fetch list of timezones from WorldTimeAPI and populate the select
-  fetch('http://worldtimeapi.org/api/timezone')
+  fetch('https://worldtimeapi.org/api/timezone')
     .then(res => res.json())
     .then(timezones => {
       timezoneSelect.innerHTML = '<option value="">Select a timezone</option>';
       timezones.forEach(tz => {
         const option = document.createElement('option');
         option.value = tz;
-        option.textContent = tz.replace('_', ' ');
+        option.textContent = tz.replace(/_/g, ' ');
         timezoneSelect.appendChild(option);
       });
     })
@@ -51,7 +51,7 @@
     clearInterval(clockInterval);
     clockDiv.textContent = 'Loading time...';
 
-    fetch(`http://worldtimeapi.org/api/timezone/${timezone}`)
+    fetch(`https://worldtimeapi.org/api/timezone/${timezone}`)
       .then(res => res.json())
       .then(data => {
         if (data.datetime) {
@@ -94,13 +94,14 @@
     fetchTime(timezoneSelect.value);
   });
 
+
   // Reset button shows custom message with typing and bounce
   resetBtn.addEventListener('click', () => {
     clearInterval(clockInterval);
     timezoneSelect.value = '';
     clockDiv.innerHTML = '<span id="typingText" class="typing bounce"></span>';
 
-   const message = "Oras na siguro para maging baby mo 🫣👉🏻👈🏻";
+    const message = "Oras na siguro para maging baby mo 🫣👉🏻👈🏻";
     const typingSpan = document.getElementById("typingText");
 
     let i = 0;
@@ -110,11 +111,7 @@
         i++;
         setTimeout(typeChar, 70);
       } else {
-        const emojiSpan = document.createElement("span");
-        emojiSpan.textContent = emoji;
-        emojiSpan.style.marginLeft = "5px";
-        emojiSpan.classList.add("bounce");
-        typingSpan.appendChild(emojiSpan);
+        // Finished typing, remove typing cursor
         typingSpan.classList.remove("typing");
       }
     }
