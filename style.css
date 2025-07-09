@@ -1,50 +1,85 @@
-*{
-    color: white;
+* {
+  color: white;
 }
+
 body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(45deg, #08001f, #30197d);
-      text-align: center;
-      padding: 20px;
-    }
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(45deg, #08001f, #30197d);
+  text-align: center;
+  padding: 20px;
+  /* Make sure the text is white as you requested */
+  color: white;
+}
 
-    h1 {
-      margin-bottom: 10px;
-    }
+h1 {
+  margin-bottom: 10px;
+}
 
-    .search-container {
-      margin-bottom: 15px;
-    }
+.search-container {
+  margin-bottom: 15px;
+}
+select {
+  color: white;         /* dropdown text white */
+  background-color: #30197d;  /* optional: dark purple bg for dropdown */
+  border-radius: 6px;
+  border: none;
+  padding: 8px;
+  width: 300px;
+  font-size: 16px;
+  cursor: pointer;
+}
 
-    input[type="text"] {
-      padding: 8px;
-      width: 300px;
-      font-size: 16px;
-      color: black;
-    }
 
-    .tz-label {
-      font-size: 1.2em;
-      margin: 10px 0;
-    }
+input[type="text"] {
+  color: black;  /* keep black for inputs */
+  background-color: white;
+  border-radius: 6px;
+  border: none;
+  padding: 8px;
+  width: 300px;
+  font-size: 16px;
+}
 
-    .clock {
-      font-size: 3em;
-      margin: 15px 0 25px 0;
-    }
+select {
+  cursor: pointer;
+}
 
-    #world-map {
-      width: 80%;
-      max-width: 800px;
-      height: 500px;
-      margin: auto;
-    }
-    button {
+.tz-label {
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
+.clock {
+  font-size: 3em;
+  margin: 15px 0 25px 0;
+  letter-spacing: 0.1em;
+  user-select: none;
+  /* white text */
+  color: white;
+}
+
+#world-map {
+  width: 80%;
+  max-width: 800px;
+  height: 500px;
+  margin: auto;
+}
+
+button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
   background: #08001f;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  transition: background 0.3s ease;
 }
+
+button:hover {
+  background: #30197d;
+}
+
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);
@@ -59,6 +94,7 @@ body {
 
 .bounce {
   animation: bounce 1s infinite;
+  display: inline-block;
 }
 
 .typing {
@@ -66,6 +102,7 @@ body {
   font-size: 1.4em;
   font-family: monospace;
   white-space: nowrap;
-  border-right: 2px solid black;
+  border-right: 2px solid white; /* changed to white for visibility */
   overflow: hidden;
+  vertical-align: middle;
 }
