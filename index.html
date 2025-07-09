@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Clock</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jvectormap@2.0.5/jquery-jvectormap.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jvectormap@2.0.5/jquery-jvectormap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jvectormap@2.0.5/jquery-jvectormap-world-mill.js"></script>
+
+</head>
+<body>
+    <h1>🌐 World Clock Map with Search</h1>
+
+  <div class="search-container">
+    <input type="text" id="countrySearch" placeholder="Search country (e.g. India, Japan)" />
+  </div>
+  <div style="margin: 15px 0;">
+  <button id="resetBtn">Reset</button>
+</div>
+
+  <div class="tz-label">Current Time Zone: <span id="tz-name">Local</span></div>
+  <div class="clock">
+    <span id="hrs">00</span>:<span id="min">00</span>:<span id="sec">00</span>
+  </div>
+
+  <div id="world-map"></div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jvectormap@2.0.5/jquery-jvectormap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jvectormap@2.0.5/jquery-jvectormap-world-mill.js"></script>
+
+  <script>
+    const hrs = document.getElementById("hrs");
+    const min = document.getElementById("min");
+    const sec = document.getElementById("sec");
+    const tzLabel = document.getElementById("tz-name");
+    const searchInput = document.getElementById("countrySearch");
+
+    // Country name → ISO code and IANA time zone
+    const countryTimeZones = {
+      "United States": { code: "US", tz: "America/New_York" },
+      "United Kingdom": { code: "GB", tz: "Europe/London" },
+      "India": { code: "IN", tz: "Asia/Kolkata" },
+      "Japan": { code: "JP", tz: "Asia/Tokyo" },
+      "Australia": { code: "AU", tz: "Australia/Sydney" },
+      "France": { code: "FR", tz: "Europe/Paris" },
+      "Germany": { code: "DE", tz: "Europe/Berlin" },
+      "China": { code: "CN", tz: "Asia/Shanghai" },
+      "Brazil": { code: "BR", tz: "America/Sao_Paulo" },
+      "Russia": { code: "RU", tz: "Europe/Moscow" },
+      "South Africa": { code: "ZA", tz: "Africa/Johannesburg" },
+      "Canada": { code: "CA", tz: "America/Toronto" },
+      "Philippines": { code: "PH", tz: "Asia/Manila" }
+    };
+
+    let selectedTimeZone = "local";
+
+    function updateClock() {
+      const now = new Date();
+
+      if (selectedTimeZone === "local") {
+        hrs.innerText = now.getHours().toString().padStart(2, "0");
+        min.innerText = now.getMinutes().toString().padStart(2, "0");
+        sec.innerText = now.getSeconds().toString().padStart(2, "0");
+        tzLabel.textContent = "Local";
+      } else {
+        const options = {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+          timeZone: selectedTimeZone
+        };
+
+        const parts = new Intl.DateTimeFormat('en-US', options).formatToParts(now);
+        hrs.innerText = parts.find(p => p.type === 'hour').value;
+        min.innerText = parts.find(p => p.type === 'minute').value;
+        sec.innerText = parts.find(p => p.type === 'second').value;
+        tzLabel.textContent = selectedTimeZone;
+      }
+    }
+
+   const clockInterval = setInterval(updateClock, 1000);
+    updateClock();
+
+    // Initialize the map
+    $(function () {
+      $('#world-map').vectorMap({
+        map: 'world_mill',
+        backgroundColor: "#cce5ff",
+        onRegionClick: function (e, code) {
+          for (let country in countryTimeZones) {
+            if (countryTimeZones[country].code === code) {
+              selectedTimeZone = countryTimeZones[country].tz;
+              tzLabel.textContent = selectedTimeZone;
+              return;
+            }
+          }
+          alert("Time zone not defined for this country.\nUsing local time.");
+          selectedTimeZone = "local";
+        }
+      });
+    });
+
+    // Handle search
+    searchInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        const query = searchInput.value.trim().toLowerCase();
+        let found = false;
+
+        for (let country in countryTimeZones) {
+          if (country.toLowerCase() === query) {
+            selectedTimeZone = countryTimeZones[country].tz;
+            tzLabel.textContent = selectedTimeZone;
+
+            // Highlight country on map
+            const mapObj = $('#world-map').vectorMap('get', 'mapObject');
+            mapObj.setFocus({ region: countryTimeZones[country].code });
+            found = true;
+            break;
+          }
+        }
+
+        if (!found) {
+          alert("Country not found or time zone not set.");
+          selectedTimeZone = "local";
+        }
+
+        searchInput.value = "";
+      }
+    });
+
+    const resetBtn = document.getElementById("resetBtn");
+
+resetBtn.addEventListener("click", () => {
+  clearInterval(clockInterval); // Stop the clock
+
+  const clockDiv = document.querySelector(".clock");
+  clockDiv.innerHTML = '<span id="typingText" class="typing bounce"></span>';
+  tzLabel.textContent = "❤️";
+
+  const message = "Oras na siguro para maging baby mo 🫣👉🏻👈🏻";
+  const typingSpan = document.getElementById("typingText");
+
+  let i = 0;
+  function typeChar() {
+    if (i < message.length) {
+      typingSpan.textContent += message.charAt(i);
+      i++;
+      setTimeout(typeChar, 70); // Speed of typing
+    } else {
+      typingSpan.classList.remove("typing"); // Remove the blinking bar
+    }
+  }
+
+  typeChar();
+});
+  </script>
+    
+</body>
+</html>
